@@ -48,7 +48,7 @@ class MenuButtonActions {
       this.lastMenuitem = menuitem;
     }
     
-    // Set the first menu item to tabindex="0" after the loop (ensuring a keyboard entry point)
+    // Set the first menu item to tabindex="0" after the loop 
     if (this.firstMenuitem) {
         this.firstMenuitem.tabIndex = 0;
     }
@@ -66,17 +66,16 @@ class MenuButtonActions {
   }
   
   /**
-   * FIX: This method implements the Roving Tabindex logic required by the lecture.
-   * 1. Updates the tabindex of the previously focused item to "-1".
-   * 2. Programmatically applies focus to the new item.
-   * 3. Updates the tabindex of the newly focused element to "0".
+   * FIX: Implements the Roving Tabindex logic.
+   * This is called by the arrow key handlers and selection logic.
    */
   setFocusToMenuitem(newMenuitem) {
     // Find the currently focused element (the previously active one)
     const currentActiveElement = document.activeElement;
     
     // 1. Update the tabindex of the previously focused element to "-1"
-    if (currentActiveElement && currentActiveElement.tabIndex === 0) {
+    // Check if the current focused element is one of our menu items before unfocusing it.
+    if (this.menuitemNodes.includes(currentActiveElement) && currentActiveElement.tabIndex === 0) {
         currentActiveElement.tabIndex = -1;
     }
 
@@ -193,8 +192,6 @@ class MenuButtonActions {
   }
 
 //This method is triggered when a keydown event occurs on the menu button.
-
-
   onButtonKeydown(event) {
     var key = event.key,
       flag = false;
@@ -246,7 +243,6 @@ class MenuButtonActions {
   }
 
 // This method is triggered when a keydown event occurs on a menu item.
-
   onMenuitemKeydown(event) {
     var tgt = event.currentTarget,
       key = event.key,
@@ -275,9 +271,10 @@ class MenuButtonActions {
       switch (key) {
         case ' ':
         case 'Enter':
+          // FIX: Ensure focus returns to the button after selection
           this.closePopup();
           this.performMenuAction(tgt);
-          this.buttonNode.focus();
+          this.buttonNode.focus(); 
           flag = true;
           break;
 
@@ -334,7 +331,8 @@ class MenuButtonActions {
   onMenuitemClick(event) {
     var tgt = event.currentTarget;
     this.closePopup();
-    this.buttonNode.focus();
+    // This line ensures the button regains focus after a click selection
+    this.buttonNode.focus(); 
     this.performMenuAction(tgt);
   }
 
